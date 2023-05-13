@@ -2,30 +2,31 @@ import React, {useState} from "react";
 
 function TodoListApp() {
     // Task todo list state
-    const [input, setInput] = useState ([]);
+    const [todo, setTodos] = useState ([]);
     
     // Temporary state
-    const [newInput, setNewInput] = useState('');
+    const [newTodo, setNewTodo] = useState('');
     const [updateData, setUpdateData] = useState('');
   
     
     // Add todo
     const addTodo = () => {
-      if (newInput) {
-        //  e.preventDefault();
-        //  e.addTodo();
-        let num = input.length + 1;
-        let newEntry = {id: num, title: newInput, status: false}
-        setInput([...input, newEntry])
-        
+      if (!newTodo) {
+        alert("Please enter an item.");
+        return;
       }
-      setNewInput('');
+      
+      let num = todo.length + 1;
+      let newEntry = {id: num, title: newTodo}
+      setTodos([...todo, newEntry]) 
+
+      setNewTodo('');
       }
   
     // Delete todo
     const deleteTodo = (id) => {
-      let newTasks = input.filter(task => task.id !== id)
-      setInput(newTasks);
+      let newTasks = todo.filter(task => task.id !== id)
+      setTodos(newTasks);
       }
     
     // Edit todo
@@ -39,9 +40,9 @@ function TodoListApp() {
   
     // Update todo
     const updateTodo = () => {
-      let filterRecords = [...input].filter(task => task.id !== updateData.id)
+      let filterRecords = [...todo].filter(task => task.id !== updateData.id)
       let updatedObject = [...filterRecords, updateData]
-      setInput(updatedObject);
+      setTodos(updatedObject);
       setUpdateData('');
       }
       
@@ -55,7 +56,7 @@ function TodoListApp() {
   
         {/* form */}
         
-          {/* Update task - edit task input */}
+          {/* Update task - edit task todo */}
           {updateData && updateData ?(
             <>
               <form className='todo-form'>
@@ -63,7 +64,7 @@ function TodoListApp() {
                 onChange={(e) => editTodo(e)}
               />
                 {/* submit button */}
-                <button type='button' onClick={()=>{updateTodo(); addTodo()}} id='submitBtn' >Update</button> 
+                <button type='button' onClick={()=>{updateTodo()}} id='submitBtn' >Update</button> 
                 </form>
               
                 {/* line to divide the form and list */}
@@ -76,11 +77,11 @@ function TodoListApp() {
             ) : (
                   <>
                   <form className='todo-form'>
-                  <input type="text" id='enterTodo' name="text" placeholder="Enter your todo"  value={newInput}
-                    onChange={ (e) => setNewInput(e.target.value)}
+                  <input type="text" id='enterTodo' name="text" placeholder="Enter your todo"  value={newTodo}
+                    onChange={ (e) => setNewTodo(e.target.value)}
                   />
                   {/* submit button */}
-                  <button type='button' onClick={()=>{updateTodo(); addTodo()}} id='submitBtn' >Submit</button> 
+                  <button type='button' onClick={()=>{addTodo()}} id='submitBtn' >Submit</button> 
                   </form>
   
                   {/* line to divide the form and list */}
@@ -97,19 +98,19 @@ function TodoListApp() {
   
         {/* to display todo list */}
         
-        {input && input
+        {todo && todo
           
           .sort((a,b) => a.id > b.id? 1:-1 )
           .map((task, index) => {
             return(
               <React.Fragment key={task.id}>
                 <div className='todo-list'>
-                  <p>{task.title}</p>
-  
-                  <div className="Btns">
+                  <li>{task.title}
+                  <div className="editDelete-btns">
                   <button className='editBtn' onClick={() => setUpdateData({id: task.id, title: task.title})}><span>Edit</span></button>
                   <button className='deleteBtn' onClick={()=>deleteTodo(task.id)}><span>Delete</span></button>
                   </div>
+                  </li>
                 </div>
               </React.Fragment>
             )
